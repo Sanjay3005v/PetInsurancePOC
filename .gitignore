@@ -1,0 +1,13 @@
+bin/
+obj/
+
+.vs/
+.vscode/
+
+*.db
+*.db-journal
+
+node_modules/
+dist/
+
+TestResults/
