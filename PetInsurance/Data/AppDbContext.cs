@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Pet> Pets => Set<Pet>();
     public DbSet<Quote> Quotes => Set<Quote>();
     public DbSet<QuoteCoverage> QuoteCoverages => Set<QuoteCoverage>();
+    public DbSet<AppUser> Users => Set<AppUser>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
