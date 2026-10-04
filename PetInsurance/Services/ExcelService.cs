@@ -124,9 +124,12 @@ public class ExcelService : IExcelService
         }
         wsCoverages.Columns().AdjustToContents();
 
-        using var ms = new MemoryStream();
+        var ms = new MemoryStream();
         workbook.SaveAs(ms);
-        return ms.ToArray();
+        ms.Position = 0;
+        var bytes = ms.ToArray();
+        ms.Dispose();
+        return bytes;
     }
 
     public async Task<(int importedQuotes, int importedCustomers, int importedPets)> ImportQuotesFromExcelAsync(Stream fileStream)
