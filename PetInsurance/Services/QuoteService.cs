@@ -165,6 +165,31 @@ public class QuoteService : IQuoteService
         return quote.QuoteId;
     }
      
+    public async Task<PagedResultDto<QuoteListDto>> GetQuotesAsync(SearchQuoteDto dto)
+    {
+        var (quotes, totalCount) = await _quoteRepository.SearchQuotesAsync(dto);
+
+        var items = quotes.Select(q => new QuoteListDto
+        {
+            QuoteId = q.QuoteId,
+            QuoteNumber = q.QuoteNumber,
+            CustomerName = q.Customer != null ? $"{q.Customer.FirstName} {q.Customer.LastName}".Trim() : string.Empty,
+            PetName = q.Pet?.PetName ?? string.Empty,
+            Species = q.Pet?.Species ?? string.Empty,
+            FinalPremium = q.FinalPremium,
+            ExpiryDate = q.ExpiryDate,
+            Status = q.Status.ToString()
+        }).ToList();
+
+        return new PagedResultDto<QuoteListDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = dto.PageNumber > 0 ? dto.PageNumber : 1,
+            PageSize = dto.PageSize > 0 ? dto.PageSize : 10
+        };
+    }
+     
     public async Task<QuoteDetailsDto?> GetQuoteByIdAsync(int quoteId)
     {
         var quote = await _quoteRepository.GetByIdAsync(quoteId);
@@ -191,6 +216,62 @@ public class QuoteService : IQuoteService
             DiscountAmount = quote.DiscountAmount,
             FinalPremium = quote.FinalPremium
         };
+    }
+     
+    public async Task<bool> UpdateQuoteAsync(int quoteId, UpdateQuoteDto dto)
+    {
+        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+
+        if (quote is null)
+        {
+            return false;
+        }
+
+        if (quote.Status == QuoteStatus.Expired || quote.Status == QuoteStatus.Cancelled || quote.Status == QuoteStatus.Converted)
+        {
+            throw new BusinessRuleException("An expired, cancelled, or converted quote cannot be modified.");
+        }
+
+        if (quote.Customer != null)
+        {
+            if (!string.IsNullOrWhiteSpace(dto.FirstName)) quote.Customer.FirstName = dto.FirstName;
+            if (!string.IsNullOrWhiteSpace(dto.LastName)) quote.Customer.LastName = dto.LastName;
+            if (!string.IsNullOrWhiteSpace(dto.Phone)) quote.Customer.Phone = dto.Phone;
+            if (!string.IsNullOrWhiteSpace(dto.ZipCode)) quote.Customer.ZipCode = dto.ZipCode;
+        }
+
+        if (quote.Pet != null)
+        {
+            if (!string.IsNullOrWhiteSpace(dto.PetName)) quote.Pet.PetName = dto.PetName;
+            if (!string.IsNullOrWhiteSpace(dto.Species)) quote.Pet.Species = dto.Species;
+            if (!string.IsNullOrWhiteSpace(dto.Breed)) quote.Pet.Breed = dto.Breed;
+            if (dto.DateOfBirth.HasValue) quote.Pet.DateOfBirth = dto.DateOfBirth.Value;
+            if (!string.IsNullOrWhiteSpace(dto.Gender)) quote.Pet.Gender = dto.Gender;
+            if (dto.HasPreExistingCondition.HasValue) quote.Pet.HasPreExistingCondition = dto.HasPreExistingCondition.Value;
+        }
+
+        if (quote.QuoteCoverage != null)
+        {
+            quote.QuoteCoverage.AnnualLimit = dto.AnnualLimit > 0 ? dto.AnnualLimit : quote.QuoteCoverage.AnnualLimit;
+            quote.QuoteCoverage.Deductible = dto.Deductible > 0 ? dto.Deductible : quote.QuoteCoverage.Deductible;
+            quote.QuoteCoverage.ReimbursementPct = dto.ReimbursementPct > 0 ? dto.ReimbursementPct : quote.QuoteCoverage.ReimbursementPct;
+            quote.QuoteCoverage.Wellness = dto.Wellness;
+        }
+
+        int petAge = quote.Pet != null ? DateTime.Today.Year - quote.Pet.DateOfBirth.Year : 1;
+        bool wellness = quote.QuoteCoverage?.Wellness ?? dto.Wellness;
+        var premium = _premiumCalculatorService.CalculatePremium(petAge, wellness, false);
+
+        quote.BasePremium = premium.BasePremium;
+        quote.AgeAdjustment = premium.AgeAdjustment;
+        quote.WellnessAmount = premium.WellnessAmount;
+        quote.DiscountAmount = premium.DiscountAmount;
+        quote.FinalPremium = premium.FinalPremium;
+
+        _quoteRepository.Update(quote);
+        await _quoteRepository.SaveChangesAsync();
+
+        return true;
     }
      
     public async Task<bool> ConvertQuoteAsync(int quoteId)
@@ -267,5 +348,10 @@ public class QuoteService : IQuoteService
         await _quoteRepository.SaveChangesAsync();
          
         return true;
+    }
+
+    public async Task<DashboardDto> GetDashboardMetricsAsync()
+    {
+        return await _quoteRepository.GetDashboardMetricsAsync();
     }
 }

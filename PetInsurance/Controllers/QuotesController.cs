@@ -28,6 +28,20 @@ namespace PetInsurance.Controllers
                 new { id = quoteId },
                 new { QuoteId = quoteId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetQuotes([FromQuery] SearchQuoteDto dto)
+        {
+            var result = await _quoteService.GetQuotesAsync(dto);
+            return Ok(result);
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetDashboard()
+        {
+            var result = await _quoteService.GetDashboardMetricsAsync();
+            return Ok(result);
+        }
         
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetQuote(int id)
@@ -40,6 +54,19 @@ namespace PetInsurance.Controllers
             }
             
             return Ok(quote);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateQuote(int id, UpdateQuoteDto dto)
+        {
+            var success = await _quoteService.UpdateQuoteAsync(id, dto);
+
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return Ok("Quote updated successfully.");
         }
         
         [HttpPost("{id:int}/convert")]

@@ -12,5 +12,7 @@ public interface IQuoteRepository
     void Update(Quote quote);
     void Delete(Quote quote);
     Task<bool> HasDuplicateActiveQuoteAsync(int customerId,int petId,decimal annualLimit,decimal deductible,decimal reimbursementPct,bool wellness);
+    Task<(List<Quote> Items, int TotalCount)> SearchQuotesAsync(PetInsurance.DTOs.SearchQuoteDto dto);
+    Task<PetInsurance.DTOs.DashboardDto> GetDashboardMetricsAsync();
     Task SaveChangesAsync();
 }
