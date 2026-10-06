@@ -15,24 +15,24 @@ public class CustomerRepository : ICustomerRepository
         _context = context;
     }
      
-    public async Task<Customer?> GetByIdAsync(int customerId)
+    public async Task<Customer?> GetCustomerByIdAsync(int customerId)
     {
         return await _context.Customers
             .FirstOrDefaultAsync(c => c.CustomerId == customerId);
     }
      
-    public async Task<Customer?> GetByEmailAsync(string email)
+    public async Task<Customer?> GetCustomerByEmailAsync(string email)
     {
         return await _context.Customers
             .FirstOrDefaultAsync(c => c.Email == email);
     }
      
-    public async Task AddAsync(Customer customer)
+    public async Task AddCustomerAsync(Customer customer)
     {
         await _context.Customers.AddAsync(customer);
     }
      
-    public async Task SaveChangesAsync()
+    public async Task SaveCustomerChangesAsync()
     {
         await _context.SaveChangesAsync();
     }

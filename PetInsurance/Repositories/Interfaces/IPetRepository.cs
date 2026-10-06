@@ -5,8 +5,8 @@ namespace PetInsurance.Repositories.Interfaces;
 
 public interface IPetRepository
 {
-    Task<Pet?> GetByIdAsync(int petId);
-    Task<Pet?> GetByCustomerAndNameAsync(int customerId, string petName);
-    Task AddAsync(Pet pet);
-    Task SaveChangesAsync();
+    Task<Pet?> GetPetByIdAsync(int petId);
+    Task<Pet?> GetPetByCustomerAndNameAsync(int customerId, string petName);
+    Task AddPetAsync(Pet pet);
+    Task SavePetChangesAsync();
 }

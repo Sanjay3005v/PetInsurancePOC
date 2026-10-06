@@ -67,7 +67,7 @@ public class QuoteService : IQuoteService
             throw new BusinessRuleException("Pet is not eligible.");
         }
          
-        var customer = await _customerRepository.GetByEmailAsync(dto.Email);
+        var customer = await _customerRepository.GetCustomerByEmailAsync(dto.Email);
          
         if (customer is null)
         {
@@ -80,11 +80,11 @@ public class QuoteService : IQuoteService
             ZipCode = dto.ZipCode
         };
          
-            await _customerRepository.AddAsync(customer);
-            await _customerRepository.SaveChangesAsync();
+            await _customerRepository.AddCustomerAsync(customer);
+            await _customerRepository.SaveCustomerChangesAsync();
         }
          
-        var pet = await _petRepository.GetByCustomerAndNameAsync( customer.CustomerId, dto.PetName);
+        var pet = await _petRepository.GetPetByCustomerAndNameAsync( customer.CustomerId, dto.PetName);
          
         if (pet is null)
         {
@@ -99,8 +99,8 @@ public class QuoteService : IQuoteService
             HasPreExistingCondition = dto.HasPreExistingCondition
         };
          
-            await _petRepository.AddAsync(pet);
-            await _petRepository.SaveChangesAsync();
+            await _petRepository.AddPetAsync(pet);
+            await _petRepository.SavePetChangesAsync();
         }
          
         bool duplicate = await _quoteRepository 
@@ -144,8 +144,8 @@ public class QuoteService : IQuoteService
             FinalPremium = premium.FinalPremium
         };
          
-        await _quoteRepository.AddAsync(quote);
-        await _quoteRepository.SaveChangesAsync();
+        await _quoteRepository.AddQuoteAsync(quote);
+        await _quoteRepository.SaveQuoteChangesAsync();
          
         var coverage = new QuoteCoverage
         {
@@ -156,9 +156,9 @@ public class QuoteService : IQuoteService
             Wellness = dto.Wellness
         };
          
-        await _quoteCoverageRepository.AddAsync(coverage);
+        await _quoteCoverageRepository.AddQuoteAsync(coverage);
          
-        await _quoteCoverageRepository.SaveChangesAsync();
+        await _quoteCoverageRepository.SaveQuoteChangesAsync();
          
         _logger.LogInformation("Quote created {QuoteNumber}",quote.QuoteNumber);
          
@@ -192,7 +192,7 @@ public class QuoteService : IQuoteService
      
     public async Task<QuoteDetailsDto?> GetQuoteByIdAsync(int quoteId)
     {
-        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+        var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
          
         if (quote is null)
         {
@@ -220,7 +220,7 @@ public class QuoteService : IQuoteService
      
     public async Task<bool> UpdateQuoteAsync(int quoteId, UpdateQuoteDto dto)
     {
-        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+        var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
 
         if (quote is null)
         {
@@ -268,15 +268,15 @@ public class QuoteService : IQuoteService
         quote.DiscountAmount = premium.DiscountAmount;
         quote.FinalPremium = premium.FinalPremium;
 
-        _quoteRepository.Update(quote);
-        await _quoteRepository.SaveChangesAsync();
+        _quoteRepository.UpdateQuote(quote);
+        await _quoteRepository.SaveQuoteChangesAsync();
 
         return true;
     }
      
     public async Task<bool> ConvertQuoteAsync(int quoteId)
     {
-        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+        var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
          
         if (quote is null)
         {
@@ -290,16 +290,16 @@ public class QuoteService : IQuoteService
          
         quote.Status = QuoteStatus.Converted;
          
-        _quoteRepository.Update(quote);
+        _quoteRepository.UpdateQuote(quote);
          
-        await _quoteRepository.SaveChangesAsync();
+        await _quoteRepository.SaveQuoteChangesAsync();
          
         return true;
     }
      
     public async Task<bool> CancelQuoteAsync(int quoteId)
     {
-        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+        var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
          
         if (quote is null)
         {
@@ -308,16 +308,16 @@ public class QuoteService : IQuoteService
          
         quote.Status = QuoteStatus.Cancelled;
          
-        _quoteRepository.Update(quote);
+        _quoteRepository.UpdateQuote(quote);
          
-        await _quoteRepository.SaveChangesAsync();
+        await _quoteRepository.SaveQuoteChangesAsync();
          
         return true;
     }
      
     public async Task<bool> RecalculateQuoteAsync(int quoteId, bool applyDiscount)
     {
-        var quote = await _quoteRepository.GetByIdAsync(quoteId);
+        var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
          
         if (quote is null)
         {
@@ -343,9 +343,9 @@ public class QuoteService : IQuoteService
          
         quote.FinalPremium = premium.FinalPremium;
          
-        _quoteRepository.Update(quote);
+        _quoteRepository.UpdateQuote(quote);
          
-        await _quoteRepository.SaveChangesAsync();
+        await _quoteRepository.SaveQuoteChangesAsync();
          
         return true;
     }

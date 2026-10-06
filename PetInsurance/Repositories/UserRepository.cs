@@ -15,17 +15,17 @@ public class UserRepository : IUserRepository
         _context = context;
     }
     
-    public async Task<AppUser?> GetByUserNameAsync(string userName)
+    public async Task<AppUser?> GetUserByUserNameAsync(string userName)
     {
         return await _context.Users.FirstOrDefaultAsync(u =>u.UserName == userName);
     }
      
-    public async Task AddAsync(AppUser user)
+    public async Task AddUserAsync(AppUser user)
     {
         await _context.Users.AddAsync(user);
     }
      
-    public async Task SaveChangesAsync()
+    public async Task SaveUserChangesAsync()
     {
         await _context.SaveChangesAsync();
     }

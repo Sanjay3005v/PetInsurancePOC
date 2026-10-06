@@ -15,13 +15,13 @@ public class PetRepository : IPetRepository
         _context = context;
     }
      
-    public async Task<Pet?> GetByIdAsync(int petId)
+    public async Task<Pet?> GetPetByIdAsync(int petId)
     {
         return await _context.Pets
             .FirstOrDefaultAsync(p => p.PetId == petId);
     }
      
-    public async Task<Pet?> GetByCustomerAndNameAsync(
+    public async Task<Pet?> GetPetByCustomerAndNameAsync(
         int customerId,
         string petName)
     {
@@ -31,12 +31,12 @@ public class PetRepository : IPetRepository
             p.PetName == petName);
     }
      
-    public async Task AddAsync(Pet pet)
+    public async Task AddPetAsync(Pet pet)
     {
         await _context.Pets.AddAsync(pet);
     }
      
-    public async Task SaveChangesAsync()
+    public async Task SavePetChangesAsync()
     {
         await _context.SaveChangesAsync();
     }

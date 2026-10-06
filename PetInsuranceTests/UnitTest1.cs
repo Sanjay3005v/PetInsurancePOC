@@ -31,14 +31,14 @@ public class AuthServiceTests
     {
         // Arrange
         var dto = new RegisterDto { UserName = "newuser", Password = "Password123!" };
-        _mockUserRepo.Setup(r => r.GetByUserNameAsync("newuser")).ReturnsAsync((AppUser?)null);
+        _mockUserRepo.Setup(r => r.GetUserByUserNameAsync("newuser")).ReturnsAsync((AppUser?)null);
 
         // Act
-        await _authService.RegisterAsync(dto);
+        await _authService.RegisterUserAsync(dto);
 
         // Assert
-        _mockUserRepo.Verify(r => r.AddAsync(It.Is<AppUser>(u => u.UserName == "newuser")), Times.Once);
-        _mockUserRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
+        _mockUserRepo.Verify(r => r.AddUserAsync(It.Is<AppUser>(u => u.UserName == "newuser")), Times.Once);
+        _mockUserRepo.Verify(r => r.SaveUserChangesAsync(), Times.Once);
     }
 
     [Test]
@@ -48,11 +48,11 @@ public class AuthServiceTests
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword("Password123!");
         var user = new AppUser { AppUserId = 1, UserName = "admin", PasswordHash = hashedPassword };
 
-        _mockUserRepo.Setup(r => r.GetByUserNameAsync("admin")).ReturnsAsync(user);
+        _mockUserRepo.Setup(r => r.GetUserByUserNameAsync("admin")).ReturnsAsync(user);
         _mockJwtService.Setup(j => j.GenerateToken(user)).Returns("mocked-jwt-token");
 
         // Act
-        var result = await _authService.LoginAsync(new LoginDto { UserName = "admin", Password = "Password123!" });
+        var result = await _authService.LoginUserAsync(new LoginDto { UserName = "admin", Password = "Password123!" });
 
         // Assert
         result.Should().NotBeNull();
@@ -66,10 +66,10 @@ public class AuthServiceTests
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword("Password123!");
         var user = new AppUser { AppUserId = 1, UserName = "admin", PasswordHash = hashedPassword };
 
-        _mockUserRepo.Setup(r => r.GetByUserNameAsync("admin")).ReturnsAsync(user);
+        _mockUserRepo.Setup(r => r.GetUserByUserNameAsync("admin")).ReturnsAsync(user);
 
         // Act
-        var result = await _authService.LoginAsync(new LoginDto { UserName = "admin", Password = "WrongPassword" });
+        var result = await _authService.LoginUserAsync(new LoginDto { UserName = "admin", Password = "WrongPassword" });
 
         // Assert
         result.Should().BeNull();

@@ -16,9 +16,9 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
     
-    public async Task RegisterAsync(RegisterDto dto)
+    public async Task RegisterUserAsync(RegisterDto dto)
     {
-    var user = await _userRepository.GetByUserNameAsync(dto.UserName);
+    var user = await _userRepository.GetUserByUserNameAsync(dto.UserName);
     
     if (user is not null)
     {
@@ -33,14 +33,14 @@ public class AuthService : IAuthService
         dto.Password)
     };
     
-    await _userRepository.AddAsync(user);
+    await _userRepository.AddUserAsync(user);
     
-    await _userRepository.SaveChangesAsync();
+    await _userRepository.SaveUserChangesAsync();
     }
     
-    public async Task<LoginResponseDto?> LoginAsync(LoginDto dto)
+    public async Task<LoginResponseDto?> LoginUserAsync(LoginDto dto)
     {
-        var user = await _userRepository.GetByUserNameAsync(dto.UserName);
+        var user = await _userRepository.GetUserByUserNameAsync(dto.UserName);
     
         if (user is null)
         {

@@ -15,18 +15,18 @@ public class QuoteCoverageRepository : IQuoteCoverageRepository
         _context = context;
     }
      
-    public async Task<QuoteCoverage?> GetByQuoteIdAsync(int quoteId)
+    public async Task<QuoteCoverage?> GetQuoteCoverageByQuoteIdAsync(int quoteId)
     {
         return await _context.QuoteCoverages
             .FirstOrDefaultAsync(qc => qc.QuoteId == quoteId);
     }
      
-    public async Task AddAsync(QuoteCoverage quoteCoverage)
+    public async Task AddQuoteAsync(QuoteCoverage quoteCoverage)
     {
         await _context.QuoteCoverages.AddAsync(quoteCoverage);
     }
      
-    public async Task SaveChangesAsync()
+    public async Task SaveQuoteChangesAsync()
     {
         await _context.SaveChangesAsync();
     }

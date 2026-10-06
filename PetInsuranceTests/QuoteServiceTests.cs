@@ -83,8 +83,8 @@ public class QuoteServiceTests
         var customer = new Customer { CustomerId = 1, Email = dto.Email };
         var pet = new Pet { PetId = 10, CustomerId = 1, PetName = dto.PetName };
 
-        _mockCustomerRepo.Setup(r => r.GetByEmailAsync(dto.Email)).ReturnsAsync(customer);
-        _mockPetRepo.Setup(r => r.GetByCustomerAndNameAsync(1, dto.PetName)).ReturnsAsync(pet);
+        _mockCustomerRepo.Setup(r => r.GetCustomerByEmailAsync(dto.Email)).ReturnsAsync(customer);
+        _mockPetRepo.Setup(r => r.GetPetByCustomerAndNameAsync(1, dto.PetName)).ReturnsAsync(pet);
         _mockQuoteRepo.Setup(r => r.HasDuplicateActiveQuoteAsync(1, 10, 5000, 250, 80, true)).ReturnsAsync(false);
         _mockCalculator.Setup(c => c.CalculatePremium(3, true, false)).Returns((50, 0, 15, 0, 65));
 
@@ -92,12 +92,12 @@ public class QuoteServiceTests
         int quoteId = await _quoteService.CreateQuoteAsync(dto);
 
         // Assert
-        _mockQuoteRepo.Verify(r => r.AddAsync(It.Is<Quote>(q =>
+        _mockQuoteRepo.Verify(r => r.AddQuoteAsync(It.Is<Quote>(q =>
             q.Status == QuoteStatus.Active &&
             q.FinalPremium == 65 &&
             (q.ExpiryDate - q.CreatedDate).TotalDays >= 29)), Times.Once);
 
-        _mockQuoteRepo.Verify(r => r.SaveChangesAsync(), Times.AtLeastOnce);
+        _mockQuoteRepo.Verify(r => r.SaveQuoteChangesAsync(), Times.AtLeastOnce);
     }
 
     [Test]
@@ -136,8 +136,8 @@ public class QuoteServiceTests
         var customer = new Customer { CustomerId = 2, Email = dto.Email };
         var pet = new Pet { PetId = 20, CustomerId = 2, PetName = dto.PetName };
 
-        _mockCustomerRepo.Setup(r => r.GetByEmailAsync(dto.Email)).ReturnsAsync(customer);
-        _mockPetRepo.Setup(r => r.GetByCustomerAndNameAsync(2, dto.PetName)).ReturnsAsync(pet);
+        _mockCustomerRepo.Setup(r => r.GetCustomerByEmailAsync(dto.Email)).ReturnsAsync(customer);
+        _mockPetRepo.Setup(r => r.GetPetByCustomerAndNameAsync(2, dto.PetName)).ReturnsAsync(pet);
         _mockQuoteRepo.Setup(r => r.HasDuplicateActiveQuoteAsync(2, 20, 5000, 250, 80, false)).ReturnsAsync(true);
 
         // Act
@@ -152,7 +152,7 @@ public class QuoteServiceTests
     {
         // Arrange
         var quote = new Quote { QuoteId = 5, Status = QuoteStatus.Active };
-        _mockQuoteRepo.Setup(r => r.GetByIdAsync(5)).ReturnsAsync(quote);
+        _mockQuoteRepo.Setup(r => r.GetQuoteByIdAsync(5)).ReturnsAsync(quote);
 
         // Act
         bool result = await _quoteService.ConvertQuoteAsync(5);
@@ -160,8 +160,8 @@ public class QuoteServiceTests
         // Assert
         result.Should().BeTrue();
         quote.Status.Should().Be(QuoteStatus.Converted);
-        _mockQuoteRepo.Verify(r => r.Update(quote), Times.Once);
-        _mockQuoteRepo.Verify(r => r.SaveChangesAsync(), Times.Once);
+        _mockQuoteRepo.Verify(r => r.UpdateQuote(quote), Times.Once);
+        _mockQuoteRepo.Verify(r => r.SaveQuoteChangesAsync(), Times.Once);
     }
 
     [Test]
@@ -169,7 +169,7 @@ public class QuoteServiceTests
     {
         // Arrange
         var quote = new Quote { QuoteId = 6, Status = QuoteStatus.Converted };
-        _mockQuoteRepo.Setup(r => r.GetByIdAsync(6)).ReturnsAsync(quote);
+        _mockQuoteRepo.Setup(r => r.GetQuoteByIdAsync(6)).ReturnsAsync(quote);
 
         // Act
         Func<Task> act = async () => await _quoteService.ConvertQuoteAsync(6);
@@ -183,7 +183,7 @@ public class QuoteServiceTests
     {
         // Arrange
         var quote = new Quote { QuoteId = 7, Status = QuoteStatus.Expired };
-        _mockQuoteRepo.Setup(r => r.GetByIdAsync(7)).ReturnsAsync(quote);
+        _mockQuoteRepo.Setup(r => r.GetQuoteByIdAsync(7)).ReturnsAsync(quote);
 
         // Act
         Func<Task> act = async () => await _quoteService.UpdateQuoteAsync(7, new UpdateQuoteDto());

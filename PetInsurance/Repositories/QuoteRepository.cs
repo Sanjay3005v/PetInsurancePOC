@@ -15,7 +15,7 @@ public class QuoteRepository :IQuoteRepository
         _context = context;
     }
      
-    public async Task<Quote?> GetByIdAsync(int quoteId)
+    public async Task<Quote?> GetQuoteByIdAsync(int quoteId)
     {
         return await _context.Quotes
         .Include(q => q.Customer)
@@ -24,7 +24,7 @@ public class QuoteRepository :IQuoteRepository
         .FirstOrDefaultAsync(q => q.QuoteId == quoteId);
     }
      
-    public async Task<Quote?> GetByQuoteNumberAsync(
+    public async Task<Quote?> GetQuoteByQuoteNumberAsync(
     string quoteNumber)
     {
         return await _context.Quotes
@@ -32,7 +32,7 @@ public class QuoteRepository :IQuoteRepository
         q.QuoteNumber == quoteNumber);
     }
      
-    public async Task<List<Quote>> GetAllAsync()
+    public async Task<List<Quote>> GetAllQuoteAsync()
     {
         return await _context.Quotes
         .Include(q => q.Customer)
@@ -41,17 +41,17 @@ public class QuoteRepository :IQuoteRepository
         .ToListAsync();
     }
      
-    public async Task AddAsync(Quote quote)
+    public async Task AddQuoteAsync(Quote quote)
     {
         await _context.Quotes.AddAsync(quote);
     }
      
-    public void Update(Quote quote)
+    public void UpdateQuote(Quote quote)
     {
         _context.Quotes.Update(quote);
     }
      
-    public void Delete(Quote quote)
+    public void DeleteQuote(Quote quote)
     {
         _context.Quotes.Remove(quote);
     }
@@ -189,7 +189,7 @@ public class QuoteRepository :IQuoteRepository
         };
     }
      
-    public async Task SaveChangesAsync()
+    public async Task SaveQuoteChangesAsync()
     {
         await _context.SaveChangesAsync();
     }

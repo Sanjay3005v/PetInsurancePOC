@@ -19,17 +19,17 @@ namespace PetInsurance.Controllers
         }
     
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto dto)
+        public async Task<IActionResult> RegisterUser(RegisterDto dto)
         {
-            await _authService.RegisterAsync(dto);
+            await _authService.RegisterUserAsync(dto);
             
             return Ok("User registered successfully.");
         }
         
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
+        public async Task<IActionResult> LoginUser(LoginDto dto)
         {
-            var response = await _authService.LoginAsync(dto);
+            var response = await _authService.LoginUserAsync(dto);
             
             if (response is null)
             {

@@ -5,7 +5,7 @@ namespace PetInsurance.Repositories.Interfaces;
 
 public interface IQuoteCoverageRepository
 {
-    Task<QuoteCoverage?> GetByQuoteIdAsync(int quoteId);
-    Task AddAsync(QuoteCoverage quoteCoverage);
-    Task SaveChangesAsync();
+    Task<QuoteCoverage?> GetQuoteCoverageByQuoteIdAsync(int quoteId);
+    Task AddQuoteAsync(QuoteCoverage quoteCoverage);
+    Task SaveQuoteChangesAsync();
 }
