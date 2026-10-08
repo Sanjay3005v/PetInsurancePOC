@@ -250,7 +250,7 @@ public class ExcelService : IExcelService
                 if (existingPet is null)
                 {
                     string dobStr = GetVal<string>(GetCell(row, petMap, "DateOfBirth", 6)) ?? GetVal<string>(GetCell(row, petMap, "DOB", 6)) ?? "";
-                    DateTime dob = DateTime.TryParse(dobStr, out var parsedDob) ? parsedDob : DateTime.Today.AddYears(-2);
+                    DateOnly dob = DateOnly.TryParse(dobStr, out var parsedDob) ? parsedDob : DateOnly.FromDateTime(DateTime.Today).AddYears(-2);
                     string gender = GetVal<string>(GetCell(row, petMap, "Gender", 7)) ?? "Unknown";
                     bool preExisting = ParseBool(GetCell(row, petMap, "HasPreExistingCondition", 8) ?? GetCell(row, petMap, "PreExistingCondition", 8));
 

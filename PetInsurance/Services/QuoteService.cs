@@ -204,12 +204,24 @@ public class QuoteService : IQuoteService
             QuoteId = quote.QuoteId,
             QuoteNumber = quote.QuoteNumber,
             CustomerName = $"{quote.Customer?.FirstName} {quote.Customer?.LastName}",
+            FirstName = quote.Customer?.FirstName ?? "",
+            LastName = quote.Customer?.LastName ?? "",
+            Phone = quote.Customer?.Phone ?? "",
             Email = quote.Customer?.Email ?? "",
+            ZipCode = quote.Customer?.ZipCode ?? "",
             PetName = quote.Pet?.PetName ?? "",
             Species = quote.Pet?.Species ?? "",
+            Breed = quote.Pet?.Breed ?? "",
+            DateOfBirth = quote.Pet?.DateOfBirth,
+            Gender = quote.Pet?.Gender ?? "" , 
+            HasPreExistingCondition = quote.Pet?.HasPreExistingCondition ?? false,
             CreatedDate = quote.CreatedDate,
             ExpiryDate = quote.ExpiryDate,
             Status = quote.Status.ToString(),
+            AnnualLimit = quote.QuoteCoverage?.AnnualLimit ?? 0,
+            Deductible = quote.QuoteCoverage?.Deductible ?? 0,
+            ReimbursementPct = quote.QuoteCoverage?.ReimbursementPct ?? 0,
+            Wellness = quote.QuoteCoverage?.Wellness ?? true, 
             BasePremium = quote.BasePremium,
             AgeAdjustment = quote.AgeAdjustment,
             WellnessAmount = quote.WellnessAmount,
@@ -258,7 +270,19 @@ public class QuoteService : IQuoteService
             quote.QuoteCoverage.Wellness = dto.Wellness;
         }
 
-        int petAge = quote.Pet != null ? DateTime.Today.Year - quote.Pet.DateOfBirth.Year : 1;
+        int petAge = 1;
+
+        if (quote.Pet != null)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            petAge = today.Year - quote.Pet.DateOfBirth.Year;
+
+            if (quote.Pet.DateOfBirth > today.AddYears(-petAge))
+            {
+                petAge--;
+            }
+        }
         bool wellness = quote.QuoteCoverage?.Wellness ?? dto.Wellness;
         var premium = _premiumCalculatorService.CalculatePremium(petAge, wellness, false);
 

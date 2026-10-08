@@ -71,7 +71,7 @@ public class QuoteServiceTests
             PetName = "Max",
             Species = "Dog",
             Breed = "Labrador",
-            DateOfBirth = DateTime.Today.AddYears(-3),
+            DateOfBirth = DateOnly.FromDateTime(DateTime.Today).AddYears(-3),
             Gender = "Male",
             HasPreExistingCondition = false,
             AnnualLimit = 5000,
@@ -108,7 +108,7 @@ public class QuoteServiceTests
         {
             Email = "test@example.com",
             PetName = "Puppy",
-            DateOfBirth = DateTime.Today // Age 0
+            DateOfBirth = DateOnly.FromDateTime(DateTime.Today) // Age 0
         };
 
         // Act
@@ -126,7 +126,7 @@ public class QuoteServiceTests
         {
             Email = "dup@example.com",
             PetName = "Rover",
-            DateOfBirth = DateTime.Today.AddYears(-2),
+            DateOfBirth = DateOnly.FromDateTime(DateTime.Today).AddYears(-2),
             AnnualLimit = 5000,
             Deductible = 250,
             ReimbursementPct = 80,

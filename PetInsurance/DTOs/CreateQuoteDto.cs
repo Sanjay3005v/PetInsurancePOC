@@ -13,7 +13,7 @@ public class CreateQuoteDto
     public string PetName {get; set;} = string.Empty;
     public string Species {get; set;} = string.Empty;
     public string Breed {get; set;} = string.Empty;
-    public DateTime DateOfBirth {get; set;} 
+    public DateOnly DateOfBirth {get; set;} 
     public string Gender {get; set;} = string.Empty;
     public bool HasPreExistingCondition {get; set;}
 
