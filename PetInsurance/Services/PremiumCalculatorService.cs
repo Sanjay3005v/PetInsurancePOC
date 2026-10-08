@@ -45,7 +45,7 @@ public class PremiumCalculatorService : IPremiumCalculatorService
          
         if (applyDiscount)
         {
-            discountAmount = _settings.DiscountAmount;
+            discountAmount = _settings.DiscountAmount > 0 ? _settings.DiscountAmount : 10m;
         }
          
         decimal finalPremium =basePremium + ageAdjustment + wellnessAmount - discountAmount;

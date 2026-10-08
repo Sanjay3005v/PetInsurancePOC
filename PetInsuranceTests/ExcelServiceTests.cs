@@ -50,7 +50,7 @@ public class ExcelServiceTests
             PetName = "Buddy",
             Species = "Dog",
             Breed = "Golden Retriever",
-            DateOfBirth = new DateTime(2020, 5, 10),
+            DateOfBirth = new DateOnly(2020, 5, 10),
             Gender = "Male",
             HasPreExistingCondition = true
         };

@@ -85,6 +85,15 @@ public class QuoteRepository :IQuoteRepository
             .Include(q => q.QuoteCoverage)
             .AsQueryable();
 
+        if (!string.IsNullOrWhiteSpace(dto.SearchQuery))
+        {
+            var sqLower = dto.SearchQuery.ToLower();
+            query = query.Where(q =>
+                (q.Customer != null && (q.Customer.Email.ToLower().Contains(sqLower) || q.Customer.FirstName.ToLower().Contains(sqLower) || q.Customer.LastName.ToLower().Contains(sqLower))) ||
+                (q.Pet != null && q.Pet.PetName.ToLower().Contains(sqLower)) ||
+                (q.QuoteNumber != null && q.QuoteNumber.ToLower().Contains(sqLower)));
+        }
+
         if (!string.IsNullOrWhiteSpace(dto.Email))
         {
             var emailLower = dto.Email.ToLower();

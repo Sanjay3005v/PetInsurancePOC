@@ -342,35 +342,33 @@ public class QuoteService : IQuoteService
     public async Task<bool> RecalculateQuoteAsync(int quoteId, bool applyDiscount)
     {
         var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
-         
+        
         if (quote is null)
         {
             return false;
         }
-         
+        
         if (quote.Pet is null || quote.QuoteCoverage is null)
         {
             return false;
         }
-     
+    
         int petAge = DateTime.Today.Year - quote.Pet.DateOfBirth.Year;
-         
-        var premium = _premiumCalculatorService.CalculatePremium(petAge, quote.QuoteCoverage.Wellness, applyDiscount);
-         
+        
+        // Toggle discount if not specified, or use specified applyDiscount value
+        bool effectiveDiscount = applyDiscount || quote.DiscountAmount == 0;
+        
+        var premium = _premiumCalculatorService.CalculatePremium(petAge, quote.QuoteCoverage.Wellness, effectiveDiscount);
+        
         quote.BasePremium = premium.BasePremium;
-         
         quote.AgeAdjustment = premium.AgeAdjustment;
-         
         quote.WellnessAmount = premium.WellnessAmount;
-         
         quote.DiscountAmount = premium.DiscountAmount;
-         
         quote.FinalPremium = premium.FinalPremium;
-         
+        
         _quoteRepository.UpdateQuote(quote);
-         
         await _quoteRepository.SaveQuoteChangesAsync();
-         
+        
         return true;
     }
 

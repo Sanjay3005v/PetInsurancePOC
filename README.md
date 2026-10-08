@@ -263,36 +263,56 @@ erDiagram
 
 ### Prerequisites
 - **.NET 10 SDK** or later installed.
+- **Node.js v18+** & **npm v9+** for Angular UI.
 - PowerShell or Terminal environment.
 
 ### Setup Instructions
 
-1. **Clone Repository**:
+#### 1. Backend ASP.NET Core API Setup (`http://localhost:5294`)
+
+1. Navigate to the backend directory:
    ```bash
-   git clone https://github.com/Sanjay3005v/PetInsurancePOC.git
-   cd PetInsurancePOC
+   cd d:\Dotnet\PetInsurancePOC\PetInsurance
    ```
 
-2. **Restore Dependencies**:
+2. Restore dependencies & build solution:
    ```bash
    dotnet restore
-   ```
-
-3. **Build Solution**:
-   ```bash
    dotnet build
    ```
 
-4. **Launch Database & Seed Data**:
-   The SQLite database file `petinsurance.db` is automatically created and populated with seed data on application startup via `DbInitializer.cs`.
-
-5. **Run Application**:
+3. Run the backend API:
    ```bash
-   dotnet run --project .\PetInsurance
+   dotnet run
    ```
 
-6. **Interactive Documentation**:
-   - Open browser to **`http://localhost:5294/scalar/v1`** or **`http://localhost:5294/swagger`**.
+4. Interactive Swagger / OpenAPI Documentation:
+   - Access Swagger UI at **`http://localhost:5294/swagger`**
+
+---
+
+#### 2. Frontend Angular UI Setup (`http://localhost:4200`)
+
+1. Open a new terminal and navigate to the frontend directory:
+   ```bash
+   cd d:\Dotnet\frontend\PetInsurance-UI
+   ```
+
+2. Install npm dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the Angular dev server:
+   ```bash
+   npm start
+   ```
+
+4. Access the Web Application in your browser:
+   - Navigate to **`http://localhost:4200`**
+   - Log in using default admin credentials:
+     - **Username**: `admin`
+     - **Password**: `Password123!`
 
 ---
 

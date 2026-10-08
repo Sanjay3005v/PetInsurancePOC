@@ -4,6 +4,7 @@ namespace PetInsurance.DTOs;
 
 public class SearchQuoteDto
 {
+    public string? SearchQuery { get; set; }
     public string? Email { get; set; }
     public string? PetName { get; set; }
     public string? Species { get; set; }

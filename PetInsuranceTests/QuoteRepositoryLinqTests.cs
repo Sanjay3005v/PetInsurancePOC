@@ -55,8 +55,8 @@ public class QuoteRepositoryLinqTests
         await _context.Customers.AddRangeAsync(cust1, cust2);
         await _context.SaveChangesAsync();
 
-        var pet1 = new Pet { CustomerId = cust1.CustomerId, PetName = "Max", Species = "Dog", Breed = "Beagle", DateOfBirth = DateTime.Today.AddYears(-2), Gender = "Male" };
-        var pet2 = new Pet { CustomerId = cust2.CustomerId, PetName = "Luna", Species = "Cat", Breed = "Persian", DateOfBirth = DateTime.Today.AddYears(-5), Gender = "Female" };
+        var pet1 = new Pet { CustomerId = cust1.CustomerId, PetName = "Max", Species = "Dog", Breed = "Beagle", DateOfBirth = DateOnly.FromDateTime(DateTime.Today.AddYears(-2)), Gender = "Male" };
+        var pet2 = new Pet { CustomerId = cust2.CustomerId, PetName = "Luna", Species = "Cat", Breed = "Persian", DateOfBirth = DateOnly.FromDateTime(DateTime.Today.AddYears(-5)), Gender = "Female" };
 
         await _context.Pets.AddRangeAsync(pet1, pet2);
         await _context.SaveChangesAsync();
