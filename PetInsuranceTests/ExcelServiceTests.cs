@@ -63,7 +63,7 @@ public class ExcelServiceTests
             CustomerId = customer.CustomerId,
             PetId = pet.PetId,
             CreatedDate = DateTime.UtcNow,
-            ExpiryDate = DateTime.UtcNow.AddDays(30),
+            ExpiryDate = DateTime.UtcNow.AddYears(1),
             Status = QuoteStatus.Active,
             BasePremium = 30m,
             AgeAdjustment = 6m,

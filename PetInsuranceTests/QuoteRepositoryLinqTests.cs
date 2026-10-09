@@ -61,9 +61,9 @@ public class QuoteRepositoryLinqTests
         await _context.Pets.AddRangeAsync(pet1, pet2);
         await _context.SaveChangesAsync();
 
-        var q1 = new Quote { QuoteNumber = "QT-001", CustomerId = cust1.CustomerId, PetId = pet1.PetId, CreatedDate = DateTime.UtcNow.AddDays(-10), ExpiryDate = DateTime.UtcNow.AddDays(20), Status = QuoteStatus.Active, FinalPremium = 100.00m };
-        var q2 = new Quote { QuoteNumber = "QT-002", CustomerId = cust2.CustomerId, PetId = pet2.PetId, CreatedDate = DateTime.UtcNow.AddDays(-5), ExpiryDate = DateTime.UtcNow.AddDays(25), Status = QuoteStatus.Converted, FinalPremium = 200.00m };
-        var q3 = new Quote { QuoteNumber = "QT-003", CustomerId = cust1.CustomerId, PetId = pet1.PetId, CreatedDate = DateTime.UtcNow.AddDays(-1), ExpiryDate = DateTime.UtcNow.AddDays(29), Status = QuoteStatus.Active, FinalPremium = 300.00m };
+        var q1 = new Quote { QuoteNumber = "QT-001", CustomerId = cust1.CustomerId, PetId = pet1.PetId, CreatedDate = DateTime.UtcNow.AddDays(-10), ExpiryDate = DateTime.UtcNow.AddYears(1), Status = QuoteStatus.Active, FinalPremium = 100.00m };
+        var q2 = new Quote { QuoteNumber = "QT-002", CustomerId = cust2.CustomerId, PetId = pet2.PetId, CreatedDate = DateTime.UtcNow.AddDays(-5), ExpiryDate = DateTime.UtcNow.AddYears(1), Status = QuoteStatus.Converted, FinalPremium = 200.00m };
+        var q3 = new Quote { QuoteNumber = "QT-003", CustomerId = cust1.CustomerId, PetId = pet1.PetId, CreatedDate = DateTime.UtcNow.AddDays(-1), ExpiryDate = DateTime.UtcNow.AddYears(1), Status = QuoteStatus.Active, FinalPremium = 300.00m };
 
         await _context.Quotes.AddRangeAsync(q1, q2, q3);
         await _context.SaveChangesAsync();

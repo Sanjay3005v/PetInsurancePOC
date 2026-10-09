@@ -317,7 +317,7 @@ public class ExcelService : IExcelService
                     CustomerId = dbCustomerId,
                     PetId = dbPetId,
                     CreatedDate = DateTime.UtcNow,
-                    ExpiryDate = DateTime.UtcNow.AddDays(30),
+                    ExpiryDate = DateTime.UtcNow.AddYears(1),
                     Status = status == default ? QuoteStatus.Active : status,
                     BasePremium = basePrem,
                     AgeAdjustment = ageAdj,

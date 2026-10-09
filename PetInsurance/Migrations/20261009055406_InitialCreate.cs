@@ -29,6 +29,21 @@ namespace PetInsurance.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    AppUserId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.AppUserId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Pets",
                 columns: table => new
                 {
@@ -38,7 +53,7 @@ namespace PetInsurance.Migrations
                     PetName = table.Column<string>(type: "TEXT", nullable: false),
                     Species = table.Column<string>(type: "TEXT", nullable: false),
                     Breed = table.Column<string>(type: "TEXT", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Gender = table.Column<string>(type: "TEXT", nullable: false),
                     HasPreExistingCondition = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
@@ -138,6 +153,9 @@ namespace PetInsurance.Migrations
         {
             migrationBuilder.DropTable(
                 name: "QuoteCoverages");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Quotes");

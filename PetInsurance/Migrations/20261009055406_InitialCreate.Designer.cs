@@ -11,8 +11,8 @@ using PetInsurance.Data;
 namespace PetInsurance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261001101817_AddAppUser")]
-    partial class AddAppUser
+    [Migration("20261009055406_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,7 +87,7 @@ namespace PetInsurance.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")

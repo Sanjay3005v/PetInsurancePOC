@@ -129,7 +129,7 @@ public class QuoteService : IQuoteService
              
             CreatedDate = DateTime.UtcNow,
              
-            ExpiryDate = DateTime.UtcNow.AddDays(30),
+            ExpiryDate = DateTime.UtcNow.AddYears(1),
              
             Status = QuoteStatus.Active,
              
@@ -155,16 +155,16 @@ public class QuoteService : IQuoteService
             ReimbursementPct = dto.ReimbursementPct,
             Wellness = dto.Wellness
         };
-         
+        
         await _quoteCoverageRepository.AddQuoteAsync(coverage);
-         
+        
         await _quoteCoverageRepository.SaveQuoteChangesAsync();
-         
+        
         _logger.LogInformation("Quote created {QuoteNumber}",quote.QuoteNumber);
-         
+        
         return quote.QuoteId;
     }
-     
+    
     public async Task<PagedResultDto<QuoteListDto>> GetQuotesAsync(SearchQuoteDto dto)
     {
         var (quotes, totalCount) = await _quoteRepository.SearchQuotesAsync(dto);

@@ -84,7 +84,7 @@ namespace PetInsurance.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")

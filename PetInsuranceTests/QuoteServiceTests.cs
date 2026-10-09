@@ -58,7 +58,7 @@ public class QuoteServiceTests
     }
 
     [Test]
-    public async Task CreateQuoteAsync_ValidInput_CalculatesPremiumAndSets30DayExpiry()
+    public async Task CreateQuoteAsync_ValidInput_CalculatesPremiumAndSets1yYearExpiry()
     {
         // Arrange
         var dto = new CreateQuoteDto
