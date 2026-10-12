@@ -153,11 +153,12 @@ public class QuoteRepository :IQuoteRepository
 
     public async Task<PetInsurance.DTOs.DashboardDto> GetDashboardMetricsAsync()
     {
-        var totalQuotes = await _context.Quotes.CountAsync();
         var activeQuotes = await _context.Quotes.CountAsync(q => q.Status == QuoteStatus.Active);
         var expiredQuotes = await _context.Quotes.CountAsync(q => q.Status == QuoteStatus.Expired);
         var convertedQuotes = await _context.Quotes.CountAsync(q => q.Status == QuoteStatus.Converted);
         var cancelledQuotes = await _context.Quotes.CountAsync(q => q.Status == QuoteStatus.Cancelled);
+
+        var totalQuotes = activeQuotes + expiredQuotes + convertedQuotes;
 
         var avgPremium = totalQuotes > 0
             ? await _context.Quotes.AverageAsync(q => q.FinalPremium)
