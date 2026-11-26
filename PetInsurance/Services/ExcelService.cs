@@ -214,7 +214,17 @@ public class ExcelService : IExcelService
                     LastName = GetVal<string>(GetCell(row, custMap, "LastName", 3)) ?? "",
                     Email = email,
                     Phone = GetVal<string>(GetCell(row, custMap, "Phone", 5)) ?? "",
-                    ZipCode = GetVal<string>(GetCell(row, custMap, "ZipCode", 6)) ?? ""
+                    ZipCode = GetVal<string>(GetCell(row, custMap, "ZipCode", 6)) ?? "",
+                    Addresses =
+                    [
+                        new Address
+                        {
+                            Line1 = "Primary Address",
+                            City = "",
+                            State = "",
+                            ZipCode = GetVal<string>(GetCell(row, custMap, "ZipCode", 6)) ?? ""
+                        }
+                    ]
                 };
                 await _context.Customers.AddAsync(existingCustomer);
                 await _context.SaveChangesAsync();

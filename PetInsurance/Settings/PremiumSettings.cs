@@ -10,4 +10,5 @@ public class PremiumSettings
     public decimal SeniorPetAdjustment { get; set; }
     public decimal WellnessAmount { get; set; }
     public decimal DiscountAmount { get; set; }
+    public int QuoteExpiryDays { get; set; } = 5;
 }

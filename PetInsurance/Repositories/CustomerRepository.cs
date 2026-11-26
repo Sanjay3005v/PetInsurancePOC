@@ -18,12 +18,14 @@ public class CustomerRepository : ICustomerRepository
     public async Task<Customer?> GetCustomerByIdAsync(int customerId)
     {
         return await _context.Customers
+            .Include(c => c.Addresses)
             .FirstOrDefaultAsync(c => c.CustomerId == customerId);
     }
      
     public async Task<Customer?> GetCustomerByEmailAsync(string email)
     {
         return await _context.Customers
+            .Include(c => c.Addresses)
             .FirstOrDefaultAsync(c => c.Email == email);
     }
      

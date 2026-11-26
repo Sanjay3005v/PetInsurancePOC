@@ -72,15 +72,37 @@ public class QuoteService : IQuoteService
         if (customer is null)
         {
             customer = new Customer
-        {
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            Email = dto.Email,
-            Phone = dto.Phone,
-            ZipCode = dto.ZipCode
-        };
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                Phone = dto.Phone,
+                ZipCode = dto.ZipCode,
+                Addresses =
+                [
+                    new Address
+                    {
+                        Line1 = !string.IsNullOrWhiteSpace(dto.AddressLine1) ? dto.AddressLine1 : "Primary Address",
+                        City = !string.IsNullOrWhiteSpace(dto.City) ? dto.City : "",
+                        State = !string.IsNullOrWhiteSpace(dto.State) ? dto.State : "",
+                        ZipCode = dto.ZipCode
+                    }
+                ]
+            };
          
             await _customerRepository.AddCustomerAsync(customer);
+            await _customerRepository.SaveCustomerChangesAsync();
+        }
+        else if (customer.Addresses.Count == 0)
+        {
+            customer.Addresses.Add(new Address
+            {
+                CustomerId = customer.CustomerId,
+                Line1 = !string.IsNullOrWhiteSpace(dto.AddressLine1) ? dto.AddressLine1 : "Primary Address",
+                City = !string.IsNullOrWhiteSpace(dto.City) ? dto.City : "",
+                State = !string.IsNullOrWhiteSpace(dto.State) ? dto.State : "",
+                ZipCode = dto.ZipCode
+            });
             await _customerRepository.SaveCustomerChangesAsync();
         }
          
@@ -129,7 +151,7 @@ public class QuoteService : IQuoteService
              
             CreatedDate = DateTime.UtcNow,
              
-            ExpiryDate = DateTime.UtcNow.AddYears(1),
+            ExpiryDate = DateTime.UtcNow.AddDays(_settings.QuoteExpiryDays > 0 ? _settings.QuoteExpiryDays : 5),
              
             Status = QuoteStatus.Active,
              

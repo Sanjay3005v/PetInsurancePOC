@@ -95,7 +95,7 @@ public class QuoteServiceTests
         _mockQuoteRepo.Verify(r => r.AddQuoteAsync(It.Is<Quote>(q =>
             q.Status == QuoteStatus.Active &&
             q.FinalPremium == 65 &&
-            (q.ExpiryDate - q.CreatedDate).TotalDays >= 29)), Times.Once);
+            (q.ExpiryDate - q.CreatedDate).TotalDays >= 4)), Times.Once);
 
         _mockQuoteRepo.Verify(r => r.SaveQuoteChangesAsync(), Times.AtLeastOnce);
     }
